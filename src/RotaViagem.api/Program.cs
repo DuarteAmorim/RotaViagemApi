@@ -10,6 +10,31 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+#region Cors
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(name: MyAllowSpecificOrigins,
+//                      policy =>
+//                      {
+//                          policy.WithOrigins("http://localhost:5000")
+//                                .AllowAnyHeader()
+//                                .AllowAnyMethod();
+//                      });
+//});
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
+});
+#endregion
+
 // Add services to the container.
 builder.Services.AddScoped<IDataService<Rota>>(
     sp => new JsonDataService<Rota>("Data/rotas.json"));
@@ -40,24 +65,26 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Simulador de Rotas de Voo", Version = "v1" });
 });
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+//builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI(c =>
         {
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
             c.RoutePrefix = string.Empty;
-        }   
+        }
         );
-    app.MapOpenApi();
-}
+    //app.MapOpenApi();
+//}
 
 app.UseHttpsRedirection();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
