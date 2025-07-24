@@ -1,0 +1,44 @@
+[
+  {
+    "Id": "f5a0e32b-3517-49fe-8a4d-a0fd33b5fa76",
+    "Origem": "GRU",
+    "Destino": "BRC",
+    "Preco": 10
+  },
+  {
+    "Id": "f31e25dd-2f6d-4170-ba94-94cf33b43f28",
+    "Origem": "BRC",
+    "Destino": "SCL",
+    "Preco": 5
+  },
+  {
+    "Id": "b67919d5-6caf-47e9-822b-cc05c63d0a81",
+    "Origem": "GRU",
+    "Destino": "CDG",
+    "Preco": 75
+  },
+  {
+    "Id": "2da32a6e-47ec-4d91-a9a9-9a2fb837fcff",
+    "Origem": "GRU",
+    "Destino": "SCL",
+    "Preco": 20
+  },
+  {
+    "Id": "853e4cc2-9fe9-41da-8a74-9ef7cd78c306",
+    "Origem": "GRU",
+    "Destino": "ORL",
+    "Preco": 56
+  },
+  {
+    "Id": "47a7c4ae-8bc4-4e59-bed5-5226fad6b785",
+    "Origem": "ORL",
+    "Destino": "CDG",
+    "Preco": 5
+  },
+  {
+    "Id": "0aebad3d-3482-40f0-8572-dba4c1fb43ee",
+    "Origem": "SCL",
+    "Destino": "ORL",
+    "Preco": 20
+  }
+]
