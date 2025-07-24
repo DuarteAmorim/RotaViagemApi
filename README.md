@@ -136,3 +136,57 @@ docker logs simulador-rotas-voo
 
 - Certifique-se que o Docker está rodando e que o usuário tem permissão para executar comandos Docker.
 
+## Requisitos e criação do script para deploy local
+
+Para facilitar o deploy local da aplicação usando Docker, é recomendado criar um script que automatize os comandos necessários para construir a imagem, parar e remover containers antigos, e executar o container atualizado.
+
+---
+
+### Requisitos para rodar o script de deploy local
+
+- **Docker instalado e em execução:**  
+  O Docker deve estar instalado na máquina e o serviço deve estar ativo para que os comandos funcionem corretamente.
+
+- **Permissões adequadas:**  
+  O usuário que executa o script deve ter permissão para rodar comandos Docker (geralmente, ser membro do grupo `docker` no Linux ou ter privilégios administrativos no Windows).
+
+- **Arquivos do projeto na raiz:**  
+  O script deve estar localizado na raiz do projeto, onde também está o `Dockerfile` e o arquivo de solução `.sln`.
+
+---
+
+### Criação do script para deploy local no Windows (`deploy.bat`)
+
+1. Na raiz do projeto, crie um arquivo chamado `deploy.bat`.
+
+2. Insira o seguinte conteúdo no arquivo:
+
+```bat
+@echo off
+docker build -t simulador-rotas-voo .
+docker stop simulador-rotas-voo
+docker rm simulador-rotas-voo
+docker run -d -p 5000:80 --name simulador-rotas-voo simulador-rotas-voo
+echo Aplicação rodando em http://localhost:5000/swagger
+pause
+
+```
+### Explicação dos comandos do script
+
+- `docker build -t simulador-rotas-voo .`  
+  Constrói a imagem Docker com a tag `simulador-rotas-voo` a partir do `Dockerfile` localizado na pasta atual.
+
+- `docker stop simulador-rotas-voo`  
+  Para o container em execução com o nome `simulador-rotas-voo`, caso ele exista.
+
+- `docker rm simulador-rotas-voo`  
+  Remove o container parado para evitar conflitos ao criar um novo container com o mesmo nome.
+
+- `docker run -d -p 5000:80 --name simulador-rotas-voo simulador-rotas-voo`  
+  Executa o container em modo destacado (`-d`), mapeando a porta 80 do container para a porta 5000 da máquina local, e nomeia o container como `simulador-rotas-voo`.
+
+- `echo Aplicação rodando em http://localhost:5000/swagger`  
+  Exibe uma mensagem informando onde a aplicação pode ser acessada.
+
+- `pause`  
+  Mantém a janela do prompt aberta para que o usuário possa visualizar a mensagem antes de fechar.
