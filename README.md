@@ -54,6 +54,42 @@ cd seu-repositorio
 
 Para facilitar o deploy e garantir que o avaliador consiga rodar a aplicação sem problemas de ambiente, recomendamos usar Docker.
 
+### Criação do script para deploy local no Windows (`deploy.bat`)
+
+1. Na raiz dos projetos `(RotaViagem/src)`, crie um arquivo chamado `deploy.bat`.
+
+2. conteúdo do arquivo `deploy.bat`:
+
+```bat
+@echo off
+docker build -t simulador-rotas-voo:prod .
+docker stop simulador-rotas-voo:prod
+docker rm simulador-rotas-voo:prod
+docker run -d -p 5000:80 --name simulador-rotas-voo-prod simulador-rotas-voo:prod
+echo Aplicação rodando em http://localhost:5000/swagger
+pause
+
+```
+### Explicação dos comandos do script
+
+- `docker build -t simulador-rotas-voo .`  
+  Constrói a imagem Docker com a tag `simulador-rotas-voo` a partir do `Dockerfile` localizado na pasta atual.
+
+- `docker stop simulador-rotas-voo`  
+  Para o container em execução com o nome `simulador-rotas-voo`, caso ele exista.
+
+- `docker rm simulador-rotas-voo`  
+  Remove o container parado para evitar conflitos ao criar um novo container com o mesmo nome.
+
+- `docker run -d -p 5000:80 --name simulador-rotas-voo simulador-rotas-voo`  
+  Executa o container em modo destacado (`-d`), mapeando a porta 80 do container para a porta 5000 da máquina local, e nomeia o container como `simulador-rotas-voo`.
+
+- `echo Aplicação rodando em http://localhost:5000/swagger`  
+  Exibe uma mensagem informando onde a aplicação pode ser acessada.
+
+- `pause`  
+  Mantém a janela do prompt aberta para que o usuário possa visualizar a mensagem antes de fechar.
+  
 #### Passos para rodar a aplicação via Docker
 
 1. **Certifique-se que o Docker está instalado e rodando.**
@@ -93,7 +129,6 @@ EXPOSE 80
 
 # Comando para iniciar a aplicação
 ENTRYPOINT ["dotnet", "RotaViagem.api.dll"]
-
 
 
 ```
@@ -165,42 +200,7 @@ Para facilitar o deploy local da aplicação usando Docker, é recomendado criar
   O usuário que executa o script deve ter permissão para rodar comandos Docker (geralmente, ser membro do grupo `docker` no Linux ou ter privilégios administrativos no Windows).
 
 - **Arquivos do projeto na raiz:**  
-  O script deve estar localizado na raiz do projeto, onde também está o `Dockerfile` e o arquivo de solução `.sln`.
+  O script deve estar localizado na pasta raiz dos projetos (RotaViagem/src/), onde também está o `Dockerfile` e o arquivo de solução `.sln`.
 
 ---
 
-### Criação do script para deploy local no Windows (`deploy.bat`)
-
-1. Na raiz do projeto, crie um arquivo chamado `deploy.bat`.
-
-2. Insira o seguinte conteúdo no arquivo:
-
-```bat
-@echo off
-docker build -t simulador-rotas-voo .
-docker stop simulador-rotas-voo
-docker rm simulador-rotas-voo
-docker run -d -p 5000:80 --name simulador-rotas-voo simulador-rotas-voo
-echo Aplicação rodando em http://localhost:5000/swagger
-pause
-
-```
-### Explicação dos comandos do script
-
-- `docker build -t simulador-rotas-voo .`  
-  Constrói a imagem Docker com a tag `simulador-rotas-voo` a partir do `Dockerfile` localizado na pasta atual.
-
-- `docker stop simulador-rotas-voo`  
-  Para o container em execução com o nome `simulador-rotas-voo`, caso ele exista.
-
-- `docker rm simulador-rotas-voo`  
-  Remove o container parado para evitar conflitos ao criar um novo container com o mesmo nome.
-
-- `docker run -d -p 5000:80 --name simulador-rotas-voo simulador-rotas-voo`  
-  Executa o container em modo destacado (`-d`), mapeando a porta 80 do container para a porta 5000 da máquina local, e nomeia o container como `simulador-rotas-voo`.
-
-- `echo Aplicação rodando em http://localhost:5000/swagger`  
-  Exibe uma mensagem informando onde a aplicação pode ser acessada.
-
-- `pause`  
-  Mantém a janela do prompt aberta para que o usuário possa visualizar a mensagem antes de fechar.
