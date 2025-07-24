@@ -18,12 +18,6 @@
     "Preco": 75
   },
   {
-    "Id": "2da32a6e-47ec-4d91-a9a9-9a2fb837fcff",
-    "Origem": "GRU",
-    "Destino": "SCL",
-    "Preco": 20
-  },
-  {
     "Id": "853e4cc2-9fe9-41da-8a74-9ef7cd78c306",
     "Origem": "GRU",
     "Destino": "ORL",
@@ -40,5 +34,23 @@
     "Origem": "SCL",
     "Destino": "ORL",
     "Preco": 20
+  },
+  {
+    "Id": "87342ecb-5219-477f-a2b8-c3ebb253eff9",
+    "Origem": "GRU",
+    "Destino": "SCL",
+    "Preco": 20
+  },
+  {
+    "Id": "dab3740f-6622-4978-8e05-aa7057d1a389",
+    "Origem": "MAO",
+    "Destino": "GRU",
+    "Preco": 39
+  },
+  {
+    "Id": "81ec820e-fc97-46ed-9ea6-00fe4bf2624f",
+    "Origem": "GRU",
+    "Destino": "BRC",
+    "Preco": 10
   }
 ]
