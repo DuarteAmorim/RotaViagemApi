@@ -33,6 +33,12 @@ builder.Services.AddCors(options =>
                                 .AllowAnyMethod();
                       });
 });
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(80);
+});
+
 #endregion
 
 // Add services to the container.
@@ -85,6 +91,7 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 
 app.UseCors(MyAllowSpecificOrigins);
+app.UseRouting();
 
 app.UseAuthorization();
 

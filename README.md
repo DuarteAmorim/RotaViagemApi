@@ -61,46 +61,60 @@ Para facilitar o deploy e garantir que o avaliador consiga rodar a aplicação s
 2. **No diretório raiz do projeto, crie um arquivo `Dockerfile` com o seguinte conteúdo:**
 
 ```dockerfile
-# Use imagem oficial do .NET 9 SDK para build
+# Etapa de build
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-WORKDIR /app
+WORKDIR /src
 
-# Copia csproj e restaura dependências
-COPY *.sln .
-COPY WebAPI/WebAPI.csproj ./WebAPI/
-RUN dotnet restore
+# Copia os arquivos de projeto para restaurar dependências
+COPY ["RotaViagem.api/RotaViagem.api.csproj", "RotaViagem.api/"]
+COPY ["RotaViagem.application/RotaViagem.application.csproj", "RotaViagem.application/"]
+COPY ["RotaViagem.domain/RotaViagem.domain.csproj", "RotaViagem.domain/"]
 
-# Copia todo o código e publica
+# Restaura as dependências do projeto API
+RUN dotnet restore "RotaViagem.api/RotaViagem.api.csproj"
+
+# Copia todo o código
 COPY . .
-RUN dotnet publish WebAPI/WebAPI.csproj -c Release -o out
 
-# Imagem runtime para rodar a aplicação
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+WORKDIR "/src/RotaViagem.api"
+
+# Publica a aplicação em modo Release, sem app host para container leve
+RUN dotnet publish "RotaViagem.api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+# Etapa final (runtime)
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
-COPY --from=build /app/out .
 
-# Exponha a porta padrão
+# Copia os arquivos publicados da etapa build
+COPY --from=build /app/publish .
+
+# Expõe a porta 80 para o container
 EXPOSE 80
 
-# Comando para rodar a aplicação
-ENTRYPOINT ["dotnet", "WebAPI.dll"]
+# Comando para iniciar a aplicação
+ENTRYPOINT ["dotnet", "RotaViagem.api.dll"]
+
+
 
 ```
 3. **Construa a imagem Docker:**
 
 ```bash
-docker build -t simulador-rotas-voo .
+docker build -t simulador-rotas-voo:prod .
 
 ```
 4. **Execute o container:**
 
 ```bash
-docker run -d -p 5000:80 --name simulador-rotas-voo simulador-rotas-voo
+docker run -d -p 5000:80 --name simulador-rotas-voo-prod simulador-rotas-voo:prod
 
 ```
 5. **Acesse a API via navegador:**
 
 http://localhost:5000/swagger
+
+```bash
+curl http://localhost:5000/swagger
 
 ---
 
@@ -109,23 +123,23 @@ http://localhost:5000/swagger
 - ***Parar o container:***
 
 ```bash
-docker stop simulador-rotas-voo
+docker stop simulador-rotas-voo:prod
 ```
 
 ```bash
-docker run -d -p 5000:80 --name simulador-rotas-voo simulador-rotas-voo
+docker run -d -p 5000:80 --name simulador-rotas-voo-prod simulador-rotas-voo:prod
 
 ```
 - ***Remover o container***
 
 ```bash
-docker rm simulador-rotas-voo
+docker rm simulador-rotas-voo-prod
 
 ```
 - ***Ver logs do container***
 
 ```bash
-docker logs simulador-rotas-voo
+docker logs simulador-rotas-voo-prod
 
 ```
 

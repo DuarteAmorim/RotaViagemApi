@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RotaViagem.Test", "src\Rota
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RotaViagem.application", "src\RotaViagem.application\RotaViagem.application.csproj", "{1D6D957E-5FBE-29C2-AE7B-970384CEADDA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B18DF40E-F6B1-4F18-8BA3-7C974661EC28} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{68DF2E9D-A190-48BD-8FA0-2DD37AFD7003} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{95B6B5A4-80EA-4EDD-96DB-4C0CA628BD37} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{1D6D957E-5FBE-29C2-AE7B-970384CEADDA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01B329B4-36C3-4AE5-8622-901B35C0B83A}
