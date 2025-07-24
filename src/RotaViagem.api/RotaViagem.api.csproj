@@ -18,11 +18,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\RotaViagem.application\RotaViagem.application.csproj" />
+	  <Folder Include="Data\" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Data\" />
+	  <ProjectReference Include="..\RotaViagem.application\RotaViagem.application.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -1,23 +1,32 @@
-# Use imagem oficial do .NET 9 SDK para build
+# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+# This stage is used when running from VS in fast mode (Default for Debug configuration)
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+USER $APP_UID
+WORKDIR /app
+EXPOSE 8080
+EXPOSE 8081
+
+
+# This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-WORKDIR /app
-
-# Copia csproj e restaura dependências
-COPY *.sln .
-COPY WebAPI/WebAPI.csproj ./WebAPI/
-RUN dotnet restore
-
-# Copia todo o código e publica
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["src/RotaViagem.api/RotaViagem.api.csproj", "src/RotaViagem.api/"]
+COPY ["RotaViagem.application/RotaViagem.application.csproj", "RotaViagem.application/"]
+COPY ["src/RotaViagem.domain/RotaViagem.domain.csproj", "src/RotaViagem.domain/"]
+RUN dotnet restore "./src/RotaViagem.api/RotaViagem.api.csproj"
 COPY . .
-RUN dotnet publish WebAPI/WebAPI.csproj -c Release -o out
+WORKDIR "/src/src/RotaViagem.api"
+RUN dotnet build "./RotaViagem.api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# Imagem runtime para rodar a aplicação
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+# This stage is used to publish the service project to be copied to the final stage
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./RotaViagem.api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+FROM base AS final
 WORKDIR /app
-COPY --from=build /app/out .
-
-# Exponha a porta padrão
-EXPOSE 80
-
-# Comando para rodar a aplicação
-ENTRYPOINT ["dotnet", "WebAPI.dll"]
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "RotaViagem.api.dll"]
